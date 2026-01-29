@@ -1,0 +1,35 @@
+{
+ "xsappname": "TFG_MARIA",
+ "tenant-mode": "dedicated",
+ "description": "",
+ "scopes": [
+  {
+   "name": "$XSAPPNAME.admin",
+   "description": "Admin"
+  }
+ ],
+ "attributes": [],
+ "role-templates": [
+  {
+   "name": "Admin",
+   "description": "Administrador grant del servicio ",
+   "scope-references": [
+    "$XSAPPNAME.admin"
+   ],
+   "attribute-references": []
+  }
+ ],
+ "oauth2-configuration": {
+  "token-validity": 3600,
+  "redirect-uris": [
+   "https://*.eu10-004.hana.ondemand.com/**",
+   "https://*.us10-004.hana.ondemand.com/**",
+   "https://*.us10-001.hana.ondemand.com/**",
+   "https://*.eu10.hana.ondemand.com/**",
+   "https://*.us10.hana.ondemand.com/**",
+   "https://*.eu10.applicationstudio.cloud.sap/**",
+   "https://*.launchpad.cfapps.us10.hana.ondemand.com/**",
+   "https://*.launchpad.cfapps.eu10.hana.ondemand.com/**"
+  ]
+ }
+}

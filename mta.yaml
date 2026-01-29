@@ -1,0 +1,65 @@
+_schema-version: 3.3.0
+ID: TFG_V2
+description: CAP OData service standalone
+version: 1.0.0
+modules:
+  - name: TFG_V2-srv
+    type: nodejs
+    path: gen/srv
+    provides:
+      - name: srv-api
+        properties:
+          srv-url: ${default-url}
+    requires:
+      - name: TFG_V2-db
+      - name: TFG_V2-auth # Para roles xsuaa
+      - name: TFG_V2-connectivity # Opcional
+    parameters:
+      buildpack: nodejs_buildpack
+      instances: 1
+    build-parameters:
+      builder: npm-ci
+
+  - name: TFG_V2-db-deployer
+    type: hdb
+    path: gen/db
+    requires:
+      - name: TFG_V2-db
+    parameters:
+      buildpack: nodejs_buildpack
+
+resources:
+  - name: TFG_V2-db
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hana
+      service-plan: hdi-shared
+
+  - name: TFG_V2-auth
+    type: org.cloudfoundry.managed-service
+    parameters:
+      path: ./xs-security.json # Tus roles Admin
+      service: xsuaa
+      service-plan: application
+      config:
+        oauth2-configuration:
+          credential-types:
+            - binding-secret
+          tenant-mode: dedicated
+          xsappname: TFG_V2-${org}-${space}
+
+  - name: TFG_V2-connectivity # Opcional destinations
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: connectivity
+      service-plan: lite
+
+parameters:
+  enable-parallel-deployments: true
+
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npm ci
+        - npx cds build --production
