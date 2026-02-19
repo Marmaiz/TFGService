@@ -10,7 +10,7 @@ using {
 /***** Entidades de datos maestros ********/
 
 entity Producto {
-    key Id          : UUID;
+    key Id     : UUID;
         Nombre : String(100);
 }
 
@@ -22,19 +22,20 @@ entity Calibre {
 }
 
 entity Caja {
-    key Id       : UUID;
-        Nombre   : String(50);
-        Peso     : Integer;
+    key Id     : UUID;
+        Nombre : String(50);
+        Peso   : Integer;
 };
 
 entity Variedad {
-    key Id      : UUID;
-        Nombre  : String(100);
+    key Id       : UUID;
+        Nombre   : String(100);
         Producto : Association to Producto;
 }
 
 entity Pedido : managed {
     key Id           : UUID;
+        ID_Display   : String(100);
         Cliente      : Association to Cliente;
         Fecha_Pedido : Date;
         Estado       : Association to Estado default 'C';
@@ -44,6 +45,7 @@ entity Pedido : managed {
 
 entity Linea : managed {
     key Id         : UUID;
+        ID_Display : String(100);
         Producto   : Association to Producto;
         Variedad   : Association to Variedad;
         Calibre    : Association to Calibre;
@@ -62,8 +64,8 @@ entity Entrada : managed {
         Socio             : Association to Socio;
         Fecha_recogida    : Date;
         Kilos             : Integer not null;
-        Kilos_disponibles : Integer;                /*para probar*/
-        Kilos_Merma       : Integer default 0;      /*para probar*/
+        Kilos_disponibles : Integer; /*para probar*/
+        Kilos_Merma       : Integer default 0; /*para probar*/
         Calibre           : Association to Calibre;
         Producto          : Association to Producto;
         Variedad          : Association to Variedad;
