@@ -27,6 +27,18 @@
   "cds": {
     "requires": {
       "[development]": {
+        "db": {
+          "kind": "hana",
+          "credentials": {
+            "host": "86843b02-2584-4078-b046-5f74f0c42be0.hna1.prod-us10.hanacloud.ondemand.com",
+            "port": 443,
+            "user": "004BDCC0805D4775AFE4D762D423D48E_DTNLFCQYR3YP87WQ466X99XGB_RT",
+            "password": "}=z4XM|u;kCwqtL~xRV =3uEZX1C=iTQ`kq*FLWK`-2)Taa?JZ xYbVpb<XUsIC063E@)ZXC=Z<b7r=ZjMR_%^u,Pr.il(%].<@Gn+LU:EI#HWID_Zm)!K(`Rl;2 b#l",
+            "encrypt": true,
+            "sslValidateCertificate": false,
+            "schema": "004BDCC0805D4775AFE4D762D423D48E"
+          }
+        },
         "auth": {
           "kind": "mocked",
           "users": {

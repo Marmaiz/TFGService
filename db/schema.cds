@@ -35,7 +35,7 @@ entity Variedad {
 
 entity Pedido : managed {
     key Id           : UUID;
-        ID_Display   : String(100);
+        Id_Display   : String(100);
         Cliente      : Association to Cliente;
         Fecha_Pedido : Date;
         Estado       : Association to Estado default 'C';
@@ -45,7 +45,8 @@ entity Pedido : managed {
 
 entity Linea : managed {
     key Id         : UUID;
-        ID_Display : String(100);
+        Id_Display : String(100);
+        NumLinea   : Integer; 
         Producto   : Association to Producto;
         Variedad   : Association to Variedad;
         Calibre    : Association to Calibre;

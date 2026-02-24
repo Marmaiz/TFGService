@@ -3,16 +3,51 @@ const cds = require('@sap/cds');
 const { Entrada } = cds.entities;
 
 module.exports = srv => {
-    /*     srv.before('CREATE', 'Pedido', (req) => {
-    
-            req.data.Estado_code = 'P';   // prueba para cambiar el estado al crear un pedido
-        }); */
 
+    srv.before('CREATE', 'Pedido', async req => {
+        const data = req.data;
+        const { Cliente_Id } = req.data;
 
-    srv.before('CREATE', 'Linea', (linea) => {
+        if (!Cliente_Id) throw new Error('Cliente requerido');
 
-        linea.data;   // prueba para ver los datos al crear  una linea
+        const tx = cds.tx(req);
+        const cliente = await tx.read('Cliente').where({ Id: Cliente_Id }).columns('Nombre');
+
+        if (!cliente.length || !cliente[0].Nombre) throw new Error('Cliente no encontrado');
+
+        const prefix = cliente[0].Nombre.slice(0, 4).toUpperCase();
+        const date = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+        const sec = Math.floor(Math.random() * 1000);
+
+        req.data.Id_Display = `${prefix}-${date}-${sec.toString().padStart(3, '0')}`;
     });
+
+
+    srv.before('CREATE', 'Linea', async req => {
+        const { Pedido_Id } = req.data;
+        if (!Pedido_Id) throw new Error('Línea requiere Pedido_Id');
+
+        const tx = cds.tx(req);
+
+        // 1. Obtener ID_Display del Pedido (no UUID)
+        const pedido = await tx.read('Pedido').where({ Id: Pedido_Id }).columns('Id_Display');
+        if (!pedido.length) throw new Error('Pedido no encontrado');
+        const pedDisplay = pedido[0].Id_Display;
+
+        // 2. Siguiente NumLinea correlativa        
+        const maxResult = await tx.run(
+            SELECT`max(NumLinea) as maxNum`
+                .from('Linea')
+                .where({ Pedido_Id })
+        );
+        const maxLinea = maxResult[0]?.maxNum || 0;  
+        const num = maxLinea + 1;
+
+        // 3. ID_Display: PEDIDO-ID-L01
+        req.data.NumLinea = num;
+        req.data.Id_Display = `${pedDisplay}-L${num.toString().padStart(2, '0')}`;
+    });
+
 
     srv.before('CREATE', 'Entrada', (req) => {
 
